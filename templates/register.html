@@ -6,18 +6,18 @@
 
 {% block body %}
 <div>
-<h3>Sign In</h3>
-    <form  action="{{ url_for('login') }}" method="post" > 
+<h3>Register</h3>
+    <form  action="{{ url_for('register') }}" method="post" > 
         <div class="form-group  " >
             <input type = "text"  name="username" autocomplete="off" placeholder="Username" autofocus class="form-control">
         </div>
         <div class="form-group  ">
-            <input type = "text"  name="password" autocomplete="off" placeholder="Password" autofocus class="form-control">
+            <input type = "password"  name="password" autocomplete="off" placeholder="Password" autofocus class="form-control">
         </div>
         <div class="form-group  ">
-            <input type = "text"  name="password1" autocomplete="off" placeholder="Re-enter Password" autofocus class="form-control">
+            <input type = "password"  name="password1" autocomplete="off" placeholder="Re-enter Password" autofocus class="form-control">
         </div>
-        <button class="btn btn-success" type="submit">Sign In</button>
+        <button class="btn btn-success" type="submit">Register</button>
      </form>
 
 </div>

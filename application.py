@@ -1,6 +1,6 @@
 import os
 
-from flask import Flask, session, render_template,flash,request
+from flask import Flask, session, render_template,flash,request,redirect,url_for
 from flask_session import Session
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
@@ -26,7 +26,7 @@ db = scoped_session(sessionmaker(bind=engine))
 @app.route("/",methods=["GET","POST"])
 @login_required
 def index():
-    """ Sign In Page"""
+    """ Index"""
     return render_template("index.html")
 
 @app.route("/login",methods=["GET","POST"])
@@ -44,7 +44,7 @@ def login():
         # get user details
         else:
             username = request.form.get("username")
-            password =(request.form.get("password")
+            password = request.form.get("password")
 
             # query to check if user is in database
             row = db.execute("SELECT user_id,username,hash FROM users WHERE username = :username",{"username":username}).fetchone()
@@ -75,3 +75,13 @@ def register():
                 return render_template("error.html",message=message)
             else:
                 db.execute("INSERT INTO users  (username,hash) VALUES (:username, :hash)",{"username":username,"hash":generate_password_hash(password)})
+                db.commit()
+                return redirect(url_for('index'))
+    else:
+        return render_template("register.html")
+    
+    @app.route("/logout",methods =["GET","POST"])
+    def logout():
+        """Log Out User"""
+        session.clear()
+        return redirect(url_for('index'))
