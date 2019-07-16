@@ -81,7 +81,19 @@ def register():
         return render_template("register.html")
     
     @app.route("/logout",methods =["GET","POST"])
+    @login_required
     def logout():
         """Log Out User"""
         session.clear()
         return redirect(url_for('index'))
+    
+    @app.route("/search",methods=["GET","POST"])
+    @login_required
+    def search():
+        """Helps User Search for Book"""
+        if request.method == "POST":
+            return render_template("search.html")
+        else:
+            return render_template("search.html")
+
+

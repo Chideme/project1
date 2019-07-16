@@ -6,9 +6,7 @@ from sqlalchemy.orm import scoped_session, sessionmaker
 engine = create_engine(os.getenv("DATABASE_URL"))
 db = scoped_session(sessionmaker(bind=engine))
 
-
-
-rows = 0
+rows = 0 # check if all rows have been inserted.
 with open('books.csv') as csv_reader: #open books.csv
     next(csv_reader)# skip first line
     books = csv.reader(csv_reader) 
