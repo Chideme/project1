@@ -87,13 +87,15 @@ def logout():
     session.clear()
     return redirect(url_for('index'))
 
-@app.route("/search",methods=["GET","POST"])
+
+@app.route("/search",methods=["POST"])
 @login_required
 def search():
     """Helps User Search for Book"""
-    if request.method == "POST":
-        return render_template("search.html")
-    else:
-        return render_template("search.html")
+  
+    query = request.form.get("search")
+    rows = db.execute("SELECT * FROM books WHERE isbn LIKE :query OR title LIKE :query OR author LIKE :query",{"query":query}).fetchall()
 
+    return render_template("search.html", rows=rows)
+    
 

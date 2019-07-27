@@ -5,8 +5,20 @@
 {% endblock %}
 
 {% block body %}
-
-    <p>Welcome!</p>
-
-    
+<div>
+    <h3>Search</h3>
+    <div id="searchform"> 
+        <form  action="{{ url_for('search') }}" method="post" > 
+            <div class="col-lg-4">
+                <div class="input-group">
+                  <input type="text" class="form-control" name ="search" placeholder="Search for...">
+                  <span class="input-group-btn">
+                    <button class="btn btn-default" type="button">Search</button>
+                  </span>
+                </div><!-- /input-group -->
+              </div><!-- /.col-lg-6 -->
+            </div><!-- /.row -->  
+         </form>
+    </div>
+    </div>    
 {% endblock %}
