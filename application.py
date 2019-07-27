@@ -2,7 +2,7 @@ import os
 
 from flask import Flask, session, render_template,flash,request,redirect,url_for
 from flask_session import Session
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine,text
 from sqlalchemy.orm import scoped_session, sessionmaker
 from werkzeug.security import check_password_hash, generate_password_hash
 from helpers import login_required
@@ -94,7 +94,7 @@ def search():
     """Helps User Search for Book"""
   
     query = request.form.get("search")
-    rows = db.execute("SELECT * FROM books WHERE isbn LIKE :query OR title LIKE :query OR author LIKE :query",{"query":query}).fetchall()
+    rows = db.execute("SELECT * FROM books WHERE isbn LIKE :query OR title LIKE :query OR author LIKE :query",{"query":f"%{query}%"}).fetchall()
 
     return render_template("search.html", rows=rows)
     
