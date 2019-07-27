@@ -98,4 +98,11 @@ def search():
 
     return render_template("search.html", rows=rows)
     
+@app.route("/search/<str:isbn>",methods=["POST"])
+@login_required
+def search(isbn):
+    """Helps User Search for Book"""
+    isbn = isbn
+    books = db.execute("SELECT * FROM books WHERE isbn =:isbn",{"isbn":isbn).fetchall()
 
+    return render_template("search.html", books=books)

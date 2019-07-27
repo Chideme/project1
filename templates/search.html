@@ -5,10 +5,11 @@
 {% endblock %}
 
 {% block body %}
-{% for row in rows %}
+<ul>
+{% for book in books %}
 <li>
-    {{ row }}
+    <a href= "{{ url_for('search',isbn = book.isbn) }}">{{book.title}}</a>
 </li>
 {% endfor %}
-</body>    
+</ul>   
 {% endblock %}
