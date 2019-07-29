@@ -8,7 +8,7 @@
 <ul>
 {% for book in books %}
 <li>
-    <a href= "{{ url_for('search',isbn = book.isbn) }}">{{book.title}}</a>
+    <a href= "{{ url_for('book',isbn = book.isbn) }}">{{book.title}}, {{ book.author }}</a>
 </li>
 {% endfor %}
 </ul>   

@@ -1,4 +1,5 @@
 import os
+import requests
 
 from flask import Flask, session, render_template,flash,request,redirect,url_for
 from flask_session import Session
@@ -21,6 +22,11 @@ Session(app)
 # Set up database
 engine = create_engine(os.getenv("DATABASE_URL"))
 db = scoped_session(sessionmaker(bind=engine))
+
+#Goodreads API key
+KEY = bbZTsm9VLVD8f8BzWemGA
+
+
 
 
 @app.route("/",methods=["GET","POST"])
@@ -88,21 +94,21 @@ def logout():
     return redirect(url_for('index'))
 
 
-@app.route("/search",methods=["POST"])
+@app.route("/books",methods=["POST"])
 @login_required
-def search():
+def books():
     """Helps User Search for Book"""
   
     query = request.form.get("search")
-    rows = db.execute("SELECT * FROM books WHERE isbn LIKE :query OR title LIKE :query OR author LIKE :query",{"query":f"%{query}%"}).fetchall()
+    books = db.execute("SELECT * FROM books WHERE isbn LIKE :query OR title LIKE :query OR author LIKE :query",{"query":f"%{query}%"}).fetchall()
 
-    return render_template("search.html", rows=rows)
+    return render_template("books.html", books=books)
     
-@app.route("/search/<str:isbn>",methods=["POST"])
+@app.route("/books/<int:isbn>",methods=["POST"])
 @login_required
-def search(isbn):
+def book(isbn):
     """Helps User Search for Book"""
     isbn = isbn
-    books = db.execute("SELECT * FROM books WHERE isbn =:isbn",{"isbn":isbn).fetchall()
+    book = db.execute("SELECT * FROM books WHERE isbn =:isbn",{"isbn":isbn}).fetchone()
 
-    return render_template("search.html", books=books)
+    return render_template("book.html", book=book)
