@@ -105,11 +105,11 @@ def books():
 
     return render_template("books.html", books=books)
     
-@app.route("/books/<int:isbn>",methods=["GET"])
+@app.route("/books/<isbn>",methods=["GET"])
 @login_required
 def book(isbn):
     """Helps User Search for Book"""
-    isbn = str(isbn)
+    isbn = isbn
     book = db.execute("SELECT * FROM books WHERE isbn =:isbn",{"isbn":isbn}).fetchone()
 
     return render_template("book.html", book=book)
