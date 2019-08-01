@@ -1,8 +1,9 @@
 import os
 import requests
 
-from flask import Flask, session, render_template,flash,request,redirect,url_for
+from flask import Flask, session, render_template,flash,request,redirect,url_for,jsonify
 from flask_session import Session
+from flask_json import FlaskJSON, JsonError, json_response, as_json
 from sqlalchemy import create_engine,text
 from sqlalchemy.orm import scoped_session, sessionmaker
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -24,7 +25,7 @@ engine = create_engine(os.getenv("DATABASE_URL"))
 db = scoped_session(sessionmaker(bind=engine))
 
 #Goodreads API key
-KEY = bbZTsm9VLVD8f8BzWemGA
+KEY = "bbZTsm9VLVD8f8BzWemGA"
 
 
 
@@ -104,11 +105,22 @@ def books():
 
     return render_template("books.html", books=books)
     
-@app.route("/books/<int:isbn>",methods=["POST"])
+@app.route("/books/<int:isbn>",methods=["GET"])
 @login_required
 def book(isbn):
     """Helps User Search for Book"""
-    isbn = isbn
+    isbn = str(isbn)
     book = db.execute("SELECT * FROM books WHERE isbn =:isbn",{"isbn":isbn}).fetchone()
 
     return render_template("book.html", book=book)
+
+@app.route("/api/<isbn>",methods=["GET"])
+@login_required
+
+def api(isbn):
+    """Helps User Search for Book"""
+  
+    isbn = isbn
+    book = db.execute("SELECT * FROM books WHERE isbn =:isbn",{"isbn":isbn}).fetchone()
+
+    return jsonify(book)
