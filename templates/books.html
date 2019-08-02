@@ -5,9 +5,9 @@
 {% endblock %}
 
 {% block body %}
-<ul>
+<ul class = "list-group">
 {% for book in books %}
-<li>
+<li class="form-inline justify-content-center list-group-item list-group-item-action list-group-item-success">
     <a href= "{{ url_for('book',isbn = book.isbn) }}">{{book.title}}, {{ book.author }}</a>
 </li>
 {% endfor %}

@@ -105,14 +105,32 @@ def books():
 
     return render_template("books.html", books=books)
     
-@app.route("/books/<isbn>",methods=["GET"])
+@app.route("/books/<isbn>",methods=["GET","POST"])
 @login_required
 def book(isbn):
     """Helps User Search for Book"""
     isbn = isbn
+    reviews = db.execute("SELECT * FROM reviews WHERE isbn =:isbn",{"isbn":isbn}).fetchall()
     book = db.execute("SELECT * FROM books WHERE isbn =:isbn",{"isbn":isbn}).fetchone()
-
-    return render_template("book.html", book=book)
+    res = requests.get("https://www.goodreads.com/book/review_counts.json", params={"key": KEY, "isbns": isbn})
+    if request.method =="GET":
+        return render_template("book.html", book=book,res=res,reviews=reviews)
+        
+    else:
+        # check if user had previously submitted reviews
+        user_id= session["user_id"]
+        user_review = db.execute("SELECT * FROM reviews WHERE isbn =:isbn AND user_id =:user_id",{"isbn":isbn,"user_id":session["user_id"]}).fetchone()
+        if user_review == None:
+            review_submit = request.form.get("review")
+            review = db.execute("INSERT INTO reviews (isbn,review,user_id) VALUES (:isbn, :user_review,:user_id)",{"isbn":isbn,"user_review":review_submit,"user_id":user_id})
+            db.commit()
+            return render_template("book.html", book=book,res=res,reviews=reviews)
+        else:
+            message ="Sorry you have already submitted a review for this one"
+            return render_template("error.html",message=message)
+        
+        
+    
 
 @app.route("/api/<isbn>",methods=["GET"])
 @login_required
@@ -122,5 +140,6 @@ def api(isbn):
   
     isbn = isbn
     book = db.execute("SELECT * FROM books WHERE isbn =:isbn",{"isbn":isbn}).fetchone()
+   
 
     return jsonify(book)
