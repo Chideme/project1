@@ -108,7 +108,7 @@ def books():
 @app.route("/books/<isbn>",methods=["GET","POST"])
 @login_required
 def book(isbn):
-    """Helps User Search for Book"""
+    """Details for a single book"""
     isbn = isbn
     reviews = db.execute("SELECT * FROM reviews WHERE isbn =:isbn",{"isbn":isbn}).fetchall()
     book = db.execute("SELECT * FROM books WHERE isbn =:isbn",{"isbn":isbn}).fetchone()
